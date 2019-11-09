@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "typescript": "^3.7.2"
+  },
+  "name": "data-calendar",
+  "version": "1.0.0",
+  "description": "A data structure for storing variables at specific moments in time.",
+  "main": "index.js",
+  "repository": "https://github.com/chaosflaw/data-calendar.git",
+  "author": "chaosflaw",
+  "license": "MIT",
+  "private": false
+}
