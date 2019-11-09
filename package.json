@@ -1,12 +1,14 @@
 {
   "dependencies": {
+    "eslint": "^6.6.0",
     "typescript": "^3.7.2"
   },
-  "name": "data-calendar",
+  "name": "timeline",
   "version": "1.0.0",
   "description": "A data structure for storing variables at specific moments in time.",
-  "main": "index.js",
-  "repository": "https://github.com/chaosflaw/data-calendar.git",
+  "main": "js/index.js",
+  "types": "js/index.d.ts",
+  "repository": "https://github.com/chaosflaw/timeline.git",
   "author": "chaosflaw",
   "license": "MIT",
   "private": false
