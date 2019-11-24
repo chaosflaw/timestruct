@@ -1,8 +1,5 @@
 {
-  "dependencies": {
-    "eslint": "^6.6.0",
-    "typescript": "^3.7.2"
-  },
+  "dependencies": {},
   "name": "timeline",
   "version": "1.0.0",
   "description": "A data structure for storing variables at specific moments in time.",
@@ -11,5 +8,18 @@
   "repository": "https://github.com/chaosflaw/timeline.git",
   "author": "chaosflaw",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "@types/chai": "^4.2.5",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "eslint": "^6.7.0",
+    "mocha": "^6.2.2",
+    "ts-mocha": "^6.0.0",
+    "typescript": "^3.7.2"
+  },
+  "scripts": {
+    "test": "yarn ts-mocha --require spec-helper.js 'ts/**/*.test.ts'"
+  }
 }
