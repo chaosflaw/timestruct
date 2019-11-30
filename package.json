@@ -1,7 +1,7 @@
 {
   "dependencies": {},
   "name": "timestruct",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A data structure for storing variables at specific moments in time.",
   "main": "js/index.js",
   "types": "js/index.d.ts",
