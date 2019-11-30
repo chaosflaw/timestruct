@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import 'mocha'
 
-import Timeline from './Timeline'
+import Timeline from './Timestruct'
 
 describe('Timeline', () => {
   it('should allow adding and retrieving a value to and from a specific day', () => {

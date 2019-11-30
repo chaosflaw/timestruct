@@ -1,3 +1,3 @@
-import Timeline from './Timeline'
+import Timestruct from './Timestruct'
 
-export default Timeline
+export default Timestruct

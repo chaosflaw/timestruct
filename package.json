@@ -5,7 +5,7 @@
   "description": "A data structure for storing variables at specific moments in time.",
   "main": "js/index.js",
   "types": "js/index.d.ts",
-  "repository": "https://github.com/chaosflaw/timeline.git",
+  "repository": "https://github.com/chaosflaw/timestruct.git",
   "author": "João Granzotti (chaosflaw) jpagranz@pm.me",
   "license": "MIT",
   "private": false,
