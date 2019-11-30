@@ -1,2 +1,2 @@
-import Timeline from './Timeline';
-export default Timeline;
+import Timestruct from './Timestruct';
+export default Timestruct;

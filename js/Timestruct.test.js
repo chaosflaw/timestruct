@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 require("mocha");
-const Timeline_1 = __importDefault(require("./Timeline"));
+const Timestruct_1 = __importDefault(require("./Timestruct"));
 describe('Timeline', () => {
     it('should allow adding and retrieving a value to and from a specific day', () => {
-        let time = new Timeline_1.default();
+        let time = new Timestruct_1.default();
         let node, date;
         date = new Date();
         time.set(date, 'test');
@@ -20,7 +20,7 @@ describe('Timeline', () => {
         chai_1.expect(node && node[0] && node[0].value).to.equal('test');
     });
     describe('set should order days correctly', () => {
-        let time = new Timeline_1.default();
+        let time = new Timestruct_1.default();
         let day1 = time.set(new Date(2019, 5, 23, 12, 56, 43), 'day1');
         let day3 = time.set(new Date(2019, 6, 13), 'day3');
         let day2 = time.set(new Date(2019, 5, 26, 12), 'day2');
