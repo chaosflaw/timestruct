@@ -1,2 +1,5 @@
 tsconfig.json
 ts
+spec-helper.js
+**/*.test.ts
+**/*.test.d.ts
