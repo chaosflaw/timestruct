@@ -1,14 +1,18 @@
 import Node from './Node'
+import unpackYearMonthDate from './util/unpackYearMonthDate'
 
 class Timeline {
   /** Latest day in the timeline. */
   private _latest: Node | null
   /** Earliest day in the timeline. */
   private _earliest: Node | null
+  /** Tree divided by year/month/day. Used for accessing nodes at specific dates with .get */
+  private _tree: YearTree
 
   constructor() {
     this._latest = null
     this._earliest = null
+    this._tree = {}
   }
 
   get earliest() {
@@ -19,7 +23,7 @@ class Timeline {
     return this._latest
   }
 
-  private _append(node: Node) {
+  private _append(node: Node): void {
     let latest = this._latest
     // set value in the day immediately following the head
     if (latest) {
@@ -30,7 +34,7 @@ class Timeline {
     this._latest = node
   }
 
-  private _prepend(node: Node) {
+  private _prepend(node: Node): void {
     let earliest = this._earliest
     // set value in the day immediately following the head
     if (earliest) {
@@ -39,6 +43,18 @@ class Timeline {
     }
 
     this._earliest = node
+  }
+
+  private _createReferenceIfDoesNotExist(year, month, date) {
+    if (!this._tree[year]) this._tree[year] = {}
+    if (!this._tree[year][month]) this._tree[year][month] = {}
+    if (!this._tree[year][month][date]) this._tree[year][month][date] = []
+  }
+
+  private _recordAtCorrespondingTreeNode(time: Date, node: Node): void {
+    let { year, month, date } = unpackYearMonthDate(time)
+    this._createReferenceIfDoesNotExist(year, month, date)
+    this._tree[year][month][date].push(node)
   }
 
   public set(time: Date, value: any): Node {
@@ -66,10 +82,22 @@ class Timeline {
         } else this._prepend(node) // if no previous earlier node is found, then attach value as a new node to the tail
       }
     }
+    this._recordAtCorrespondingTreeNode(time, node)
     return node
   }
 
-  public get(time: Date) {}
+  public get(time: Date): Node[] | undefined {
+    let { year, month, date } = unpackYearMonthDate(time)
+    return (this._tree[year] && this._tree[year][month] && this._tree[year][month][date]) || undefined
+  }
 }
 
 export default Timeline
+
+type YearTree = {
+  [year: number]: {
+    [month: number]: {
+      [day: number]: Node[]
+    }
+  }
+}
