@@ -7,7 +7,7 @@ describe('Timeline', () => {
   it('should allow adding and retrieving a value to and from a specific day', () => {
     let time = new Timeline()
     time.set(new Date(), 'test')
-    // expect(time.get(new Date())).to.equal('test')
+    expect(time.get(new Date())).to.equal('test')
   })
 
   describe('order days correctly', () => {
