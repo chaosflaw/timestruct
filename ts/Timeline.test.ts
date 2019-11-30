@@ -10,7 +10,7 @@ describe('Timeline', () => {
     expect(time.get(new Date())).to.equal('test')
   })
 
-  describe('order days correctly', () => {
+  describe('set should order days correctly', () => {
     let time = new Timeline()
     // hours and below are used purely to ensure that the timeline keeps entries stored by day and, as such, hours, minutes and seconds should be irrelevant
     let day1 = time.set(new Date(2019, 5, 23, 12, 56, 43), 'day1')
