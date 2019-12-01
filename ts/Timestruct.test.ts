@@ -12,12 +12,12 @@ describe('Timeline', () => {
     date = new Date()
     time.set(date, 'test')
     node = time.get(date)
-    expect(node && node[0] && node[0].value).to.equal('test')
+    expect(node && node.value).to.equal('test')
 
     date = new Date(1998, 11, 25)
     time.set(date, 'test')
     node = time.get(date)
-    expect(node && node[0] && node[0].value).to.equal('test')
+    expect(node && node.value).to.equal('test')
   })
 
   describe('set should order days correctly', () => {

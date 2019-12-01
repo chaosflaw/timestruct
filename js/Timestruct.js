@@ -10,6 +10,7 @@ class Timeline {
         this._latest = null;
         this._earliest = null;
         this._tree = {};
+        this._length = 0;
     }
     get earliest() {
         return this._earliest;
@@ -33,43 +34,55 @@ class Timeline {
         }
         this._earliest = node;
     }
-    _createReferenceIfDoesNotExist(year, month, date) {
+    _createReferenceIfDoesNotExist(year, month) {
         if (!this._tree[year])
             this._tree[year] = {};
         if (!this._tree[year][month])
             this._tree[year][month] = {};
-        if (!this._tree[year][month][date])
-            this._tree[year][month][date] = [];
     }
     _recordAtCorrespondingTreeNode(time, node) {
         let { year, month, date } = unpackYearMonthDate_1.default(time);
-        this._createReferenceIfDoesNotExist(year, month, date);
-        this._tree[year][month][date].push(node);
+        this._createReferenceIfDoesNotExist(year, month);
+        this._tree[year][month][date] = node;
     }
     set(time, value) {
         let node = new Node_1.default(value, time);
         if (!this._latest) {
             this._latest = node;
             this._earliest = node;
+            this._length++;
         }
         else {
-            if (node.time >= this._latest.time)
-                this._append(node);
-            else if (this._earliest && node.time <= this._earliest.time)
-                this._prepend(node);
-            else {
-                let current = this._latest;
-                while (current.prev && current.prev.time >= time)
-                    current = current.prev;
-                if (current.prev) {
-                    let prev = current.prev;
-                    prev.next = node;
-                    node.prev = prev;
-                    current.prev = node;
-                    node.next = current;
+            let { year, month, date } = unpackYearMonthDate_1.default(time);
+            let currentNode = this._tree[year] && this._tree[year][month] && this._tree[year][month][date];
+            if (currentNode) {
+                node.prev = currentNode.prev;
+                node.next = currentNode.next;
+                if (this._length === 1) {
+                    this._latest = node;
+                    this._earliest = node;
                 }
-                else
+            }
+            else {
+                if (node.time >= this._latest.time)
+                    this._append(node);
+                else if (this._earliest && node.time <= this._earliest.time)
                     this._prepend(node);
+                else {
+                    let current = this._latest;
+                    while (current.prev && current.prev.time >= time)
+                        current = current.prev;
+                    if (current.prev) {
+                        let prev = current.prev;
+                        prev.next = node;
+                        node.prev = prev;
+                        current.prev = node;
+                        node.next = current;
+                    }
+                    else
+                        this._prepend(node);
+                }
+                this._length++;
             }
         }
         this._recordAtCorrespondingTreeNode(time, node);

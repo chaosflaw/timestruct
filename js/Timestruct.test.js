@@ -13,11 +13,11 @@ describe('Timeline', () => {
         date = new Date();
         time.set(date, 'test');
         node = time.get(date);
-        chai_1.expect(node && node[0] && node[0].value).to.equal('test');
+        chai_1.expect(node && node.value).to.equal('test');
         date = new Date(1998, 11, 25);
         time.set(date, 'test');
         node = time.get(date);
-        chai_1.expect(node && node[0] && node[0].value).to.equal('test');
+        chai_1.expect(node && node.value).to.equal('test');
     });
     describe('set should order days correctly', () => {
         let time = new Timestruct_1.default();

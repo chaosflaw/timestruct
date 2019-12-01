@@ -3,6 +3,7 @@ declare class Timeline {
     private _latest;
     private _earliest;
     private _tree;
+    private _length;
     constructor();
     get earliest(): Node | null;
     get latest(): Node | null;
@@ -11,6 +12,6 @@ declare class Timeline {
     private _createReferenceIfDoesNotExist;
     private _recordAtCorrespondingTreeNode;
     set(time: Date, value: any): Node;
-    get(time: Date): Node[] | undefined;
+    get(time: Date): Node | undefined;
 }
 export default Timeline;

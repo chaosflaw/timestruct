@@ -9,10 +9,13 @@ class Timeline {
   /** Tree divided by year/month/day. Used for accessing nodes at specific dates with .get */
   private _tree: YearTree
 
+  private _length: number
+
   constructor() {
     this._latest = null
     this._earliest = null
     this._tree = {}
+    this._length = 0
   }
 
   get earliest() {
@@ -45,16 +48,15 @@ class Timeline {
     this._earliest = node
   }
 
-  private _createReferenceIfDoesNotExist(year, month, date) {
+  private _createReferenceIfDoesNotExist(year: number, month: number) {
     if (!this._tree[year]) this._tree[year] = {}
     if (!this._tree[year][month]) this._tree[year][month] = {}
-    if (!this._tree[year][month][date]) this._tree[year][month][date] = []
   }
 
   private _recordAtCorrespondingTreeNode(time: Date, node: Node): void {
     let { year, month, date } = unpackYearMonthDate(time)
-    this._createReferenceIfDoesNotExist(year, month, date)
-    this._tree[year][month][date].push(node)
+    this._createReferenceIfDoesNotExist(year, month)
+    this._tree[year][month][date] = node
   }
 
   public set(time: Date, value: any): Node {
@@ -62,31 +64,48 @@ class Timeline {
     if (!this._latest) {
       this._latest = node
       this._earliest = node
+      this._length++
     } else {
-      // case A.1: timestamp is later than the current head and becomes the new head
-      if (node.time >= this._latest.time) this._append(node)
-      // case A.2: timestamp is earlier than the current tail and becomes the new tail
-      else if (this._earliest && node.time <= this._earliest.time) this._prepend(node)
-      // case B: timestamp is anywhere in-between
-      else {
-        // follow previous until you reach a previous node which timestamp is earlier than time
-        let current = this._latest
-        while (current.prev && current.prev.time >= time) current = current.prev
-        // if you find one, splice value onto that position
-        if (current.prev) {
-          let prev = current.prev
-          prev.next = node
-          node.prev = prev
-          current.prev = node
-          node.next = current
-        } else this._prepend(node) // if no previous earlier node is found, then attach value as a new node to the tail
+      let { year, month, date } = unpackYearMonthDate(time)
+      let currentNode = this._tree[year] && this._tree[year][month] && this._tree[year][month][date]
+
+      // If a node already exists at this location, replace it with the new one
+      if (currentNode) {
+        node.prev = currentNode.prev
+        node.next = currentNode.next
+        if (this._length === 1) {
+          this._latest = node
+          this._earliest = node
+        }
+      } else {
+        // No node currently exists on this day. At this point we've already checked the tree structure and ensured only one node exists on each day.
+        // This block is linked list logic.
+        // case A.1: timestamp is later than the current head and becomes the new head
+        if (node.time >= this._latest.time) this._append(node)
+        // case A.2: timestamp is earlier than the current tail and becomes the new tail
+        else if (this._earliest && node.time <= this._earliest.time) this._prepend(node)
+        // case B: timestamp is anywhere in-between
+        else {
+          // follow previous until you reach a previous node which timestamp is earlier than time
+          let current = this._latest
+          while (current.prev && current.prev.time >= time) current = current.prev
+          // if you find one, splice value onto that position
+          if (current.prev) {
+            let prev = current.prev
+            prev.next = node
+            node.prev = prev
+            current.prev = node
+            node.next = current
+          } else this._prepend(node) // if no previous earlier node is found, then attach value as a new node to the tail
+        }
+        this._length++
       }
     }
     this._recordAtCorrespondingTreeNode(time, node)
     return node
   }
 
-  public get(time: Date): Node[] | undefined {
+  public get(time: Date): Node | undefined {
     let { year, month, date } = unpackYearMonthDate(time)
     return (this._tree[year] && this._tree[year][month] && this._tree[year][month][date]) || undefined
   }
@@ -97,7 +116,7 @@ export default Timeline
 type YearTree = {
   [year: number]: {
     [month: number]: {
-      [day: number]: Node[]
+      [day: number]: Node
     }
   }
 }
