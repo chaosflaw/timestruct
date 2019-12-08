@@ -21,6 +21,6 @@
   },
   "scripts": {
     "test": "yarn ts-mocha --require spec-helper.js 'ts/**/*.test.ts'",
-    "build": "yarn tsc"
+    "build": "rm -rf js && yarn tsc"
   }
 }
