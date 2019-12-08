@@ -20,6 +20,7 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "test": "yarn ts-mocha --require spec-helper.js 'ts/**/*.test.ts'"
+    "test": "yarn ts-mocha --require spec-helper.js 'ts/**/*.test.ts'",
+    "build": "yarn tsc"
   }
 }
