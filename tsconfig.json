@@ -5,7 +5,7 @@
     "declaration": true /* Generates corresponding '.d.ts' file. */,
     "noLib": false /* Do not include the default library file (lib.d.ts). */,
     "outDir": "js" /* Redirect output structure to the directory. */,
-    "removeComments": true /* Do not emit comments to output. */,
+    "removeComments": false /* Emit comments to output; needed to keep JSDoc descriptions. */,
     "strict": true /* Enable all strict type-checking options. */,
     "noImplicitAny": false,
     "noUnusedLocals": true /* Report errors on unused locals. */,

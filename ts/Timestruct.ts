@@ -1,31 +1,34 @@
 import Node from './Node'
 import unpackYearMonthDate from './util/unpackYearMonthDate'
 
-class Timeline {
+class Timestruct {
   /** Latest day in the timeline. */
-  private _latest: Node | null
+  private _latest?: Node
   /** Earliest day in the timeline. */
-  private _earliest: Node | null
+  private _earliest?: Node
   /** Tree divided by year/month/day. Used for accessing nodes at specific dates with .get */
   private _tree: YearTree
 
   private _length: number
 
   constructor() {
-    this._latest = null
-    this._earliest = null
+    this._latest
+    this._earliest
     this._tree = {}
     this._length = 0
   }
 
+  /** Earliest node in the timeline */
   get earliest() {
     return this._earliest
   }
 
+  /** Latest node in the timeline */
   get latest() {
     return this._latest
   }
 
+  /** Adds a node to the end of the timeline and sets it as latest */
   private _append(node: Node): void {
     let latest = this._latest
     // set value in the day immediately following the head
@@ -37,6 +40,7 @@ class Timeline {
     this._latest = node
   }
 
+  /** Adds a node to the beginning of the timeline and sets it as earliest */
   private _prepend(node: Node): void {
     let earliest = this._earliest
     // set value in the day immediately following the head
@@ -48,12 +52,21 @@ class Timeline {
     this._earliest = node
   }
 
+  /**
+   * Initializes an empty object at the specified year and month, if they do not exist.
+   * Guarantees that a month can be used.
+   */
   private _createReferenceIfDoesNotExist(year: number, month: number) {
     if (!this._tree[year]) this._tree[year] = {}
     if (!this._tree[year][month]) this._tree[year][month] = {}
   }
 
-  private _recordAtCorrespondingTreeNode(time: Date, node: Node): void {
+  /**
+   * Records a Node at a specified date in the tree. Overrides existing Node if it exists.
+   * @param time - A Date object containing the date to record to.
+   * @param node - The Node to record.
+   */
+  private _recordInTree(time: Date, node: Node): void {
     let { year, month, date } = unpackYearMonthDate(time)
     this._createReferenceIfDoesNotExist(year, month)
     this._tree[year][month][date] = node
@@ -61,7 +74,9 @@ class Timeline {
 
   public set(time: Date, value: any): Node {
     let node = new Node(value, time)
+
     if (!this._latest) {
+      // If no nodes exist yet, set this node as the only one in the tree.
       this._latest = node
       this._earliest = node
       this._length++
@@ -101,17 +116,21 @@ class Timeline {
         this._length++
       }
     }
-    this._recordAtCorrespondingTreeNode(time, node)
+    this._recordInTree(time, node)
     return node
   }
 
-  public get(time: Date): Node | undefined {
+  public get(time: Date, { create }: { create: true } & GetOptions): Node
+  public get(time: Date, { create }: { create: false } & GetOptions): Node | undefined
+  public get(time: Date, { create }: GetOptions = {}): Node | undefined {
     let { year, month, date } = unpackYearMonthDate(time)
-    return (this._tree[year] && this._tree[year][month] && this._tree[year][month][date]) || undefined
+    let existingNode = (this._tree[year] && this._tree[year][month] && this._tree[year][month][date])
+    if (!existingNode && create) existingNode = this.set(time, undefined)
+    return existingNode
   }
 }
 
-export default Timeline
+export default Timestruct
 
 type YearTree = {
   [year: number]: {
@@ -119,4 +138,9 @@ type YearTree = {
       [day: number]: Node
     }
   }
+}
+
+interface GetOptions {
+  /** Initialize a node if it does not exist yet. */
+  create?: boolean
 }

@@ -1,11 +1,12 @@
 import { expect } from 'chai'
 import 'mocha'
 
-import Timeline from './Timestruct'
+import Timestruct from './Timestruct'
+import Node from './Node'
 
 describe('Timeline', () => {
   it('should allow adding and retrieving a value to and from a specific day', () => {
-    let time = new Timeline()
+    let time = new Timestruct()
 
     let node, date
 
@@ -20,8 +21,14 @@ describe('Timeline', () => {
     expect(node && node.value).to.equal('test')
   })
 
+  it('allows creating a date on .get if it does not exist yet', () => {
+    let time = new Timestruct()
+    let node = time.get(new Date(), true)
+    expect(node).to.exist.and.be.an.instanceOf(Node)
+  })
+
   describe('set should order days correctly', () => {
-    let time = new Timeline()
+    let time = new Timestruct()
     // hours and below are used purely to ensure that the timeline keeps entries stored by day and, as such, hours, minutes and seconds should be irrelevant
     let day1 = time.set(new Date(2019, 5, 23, 12, 56, 43), 'day1')
     let day3 = time.set(new Date(2019, 6, 13), 'day3')
